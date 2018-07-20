@@ -45,4 +45,12 @@ describe('Actors API', () => {
             });
     });
 
+    it('Gets an actor by id', () => {
+        return request
+            .get(`/api/actors/${depp._id}`)
+            .then(({ body }) => {
+                assert.deepEqual(body, depp);
+            });
+    });
+
 });
