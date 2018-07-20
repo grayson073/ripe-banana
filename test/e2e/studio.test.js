@@ -29,4 +29,19 @@ describe('Studios API', () => {
     it('Saves a studio', () => {
         assert.isOk(univision._id);
     });
+
+    it('Gets a list of studios', () => {
+        let fox;
+        return save({
+            name: 'Fox'
+        })
+            .then(_fox => {
+                fox = _fox;
+                return request.get('/api/studios');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [univision, fox]);
+            });
+    });
 });
