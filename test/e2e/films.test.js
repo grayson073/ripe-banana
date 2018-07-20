@@ -51,7 +51,7 @@ describe('Films API', () => {
         assert.isOk(scarface._id);
     });
 
-    it('Gets a list of films', () => {
+    it.only('Gets a list of films', () => {
         let topGun;
         return save({ 
             title: 'Top Gun', 
