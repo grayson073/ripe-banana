@@ -53,4 +53,15 @@ describe('Actors API', () => {
             });
     });
 
+    it('Updates an actor by id', () => {
+        depp.name = 'Johnny';
+        return request
+            .put(`/api/actors/${depp._id}`)
+            .send(depp)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, depp);
+            });
+    });
+
 });
