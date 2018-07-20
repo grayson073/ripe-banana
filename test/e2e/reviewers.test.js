@@ -54,4 +54,15 @@ describe('Reviewers API', () => {
             });
     });
 
+    it('Updates a reviewer by id', () => {
+        kevin.company = 'Epicodus';
+        return request
+            .put(`/api/reviewers/${kevin._id}`)
+            .send(kevin)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, kevin);
+            });
+    });
+
 });
