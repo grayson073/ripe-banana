@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/film');
-// const { getErrors } = require('./helpers');
+const { getErrors } = require('./helpers');
 
 describe('Film model', () => {
     
@@ -21,6 +21,19 @@ describe('Film model', () => {
         delete json._id;
         json.cast.forEach(c => delete c._id);
         assert.deepEqual(json, data);
-        assert.isUndefined(film.validateSync(), 3);
+        assert.isUndefined(film.validateSync());
+    });
+
+    it('Validates required fields', () => {
+        const film = new Film({
+            cast:[{
+            
+            }]
+        });
+        const errors = getErrors(film.validateSync(), 3);
+        
+        assert.equal(errors.title.kind, 'required'); 
+        assert.equal(errors.studio.kind, 'required'); 
+        assert.equal(errors['cast.0.actor'].kind, 'required'); 
     });
 });
