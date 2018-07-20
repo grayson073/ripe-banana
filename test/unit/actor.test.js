@@ -1,5 +1,6 @@
 const { assert } = require('chai');
 const Actor = require('../../lib/models/actor');
+const { getErrors } = require('./helpers');
 
 describe('Actor model', () => {
 
@@ -16,6 +17,13 @@ describe('Actor model', () => {
         delete json._id;
         assert.deepEqual(json, data);
         assert.isUndefined(actor.validateSync());
+    });
+
+    it('Requires an actor name', () => {
+        const actor = new Actor({});
+        const errors = getErrors(actor.validateSync(), 1);
+        assert.equal(errors.name.kind, 'required');
+        
     });
 
 });
