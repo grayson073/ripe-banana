@@ -30,4 +30,21 @@ describe('Reviewers API', () => {
         assert.isOk(kevin._id);
     });
 
+    it('Gets a list of reviewers', () => {
+        let mario;
+        return save({
+            name: 'Mario',
+            company: 'Alchemy'
+        })
+            .then(_mario => {
+                mario = _mario;
+                return request.get('/api/reviewers');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [kevin, mario]);
+            });
+
+    });
+
 });
