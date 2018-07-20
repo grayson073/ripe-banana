@@ -31,7 +31,7 @@ describe('Films API', () => {
             .post('/api/actors')
             .send({ name: 'The Rock' })
             .then(({ body }) => depp = body);
-    })
+    });
 
     let scarface;
     beforeEach(() => {
@@ -50,5 +50,24 @@ describe('Films API', () => {
     it('Saves a film', () => {
         assert.isOk(scarface._id);
     });
+
+    it.only('Gets a list of films', () => {
+        let topGun;
+        return save({ 
+            title: 'Top Gun', 
+            studio: fox._id,
+            cast: [{
+                actor: depp._id
+            }]
+        })
+            .then(data => {
+                topGun = data;
+                return request.get('/api/films');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [scarface, topGun]);
+            });
+    }); 
 
 });
