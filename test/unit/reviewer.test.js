@@ -18,7 +18,7 @@ describe('Reviewer model', () => {
         assert.isUndefined(reviewer.validateSync());
     });
 
-    it('Requires an actor name', () => {
+    it('Requires a reviewer name and company', () => {
         const reviewer = new Reviewer({});
         const errors = getErrors(reviewer.validateSync(), 2);
         assert.equal(errors.name.kind, 'required');
