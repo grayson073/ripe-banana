@@ -44,7 +44,14 @@ describe('Reviewers API', () => {
             .then(({ body }) => {
                 assert.deepEqual(body, [kevin, mario]);
             });
+    });
 
+    it('Gets a reviewer by id', () => {
+        return request
+            .get(`/api/reviewers/${kevin._id}`)
+            .then(({ body }) => {
+                assert.deepEqual(body, kevin);
+            });
     });
 
 });
