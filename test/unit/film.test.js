@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/film');
-const { getErrors } = require('./helpers');
+const { getErrors } = require('./_helpers');
 
 describe('Film model', () => {
     

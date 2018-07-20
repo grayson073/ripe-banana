@@ -19,7 +19,7 @@ describe('Actors API', () => {
     let depp;
     beforeEach(() => {
         return save({
-            name: 'Johny Depp'
+            name: 'Johnny Depp'
         })
             .then(data => {
                 depp = data;

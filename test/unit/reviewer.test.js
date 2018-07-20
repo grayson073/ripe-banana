@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const Reviewer = require('../../lib/models/reviewer');
-const { getErrors } = require('./helpers');
+const { getErrors } = require('./_helpers');
 
 describe('Reviewer model', () => {
 

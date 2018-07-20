@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const Actor = require('../../lib/models/actor');
-const { getErrors } = require('./helpers');
+const { getErrors } = require('./_helpers');
 
 describe('Actor model', () => {
 
