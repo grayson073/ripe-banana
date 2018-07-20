@@ -44,4 +44,12 @@ describe('Studios API', () => {
                 assert.deepEqual(body, [univision, fox]);
             });
     });
+
+    it('Gets a studio by id', () => {
+        return request
+            .get(`/api/studios/${univision._id}`)
+            .then(({ body }) => {
+                assert.deepEqual(body, univision);
+            });
+    });
 });
