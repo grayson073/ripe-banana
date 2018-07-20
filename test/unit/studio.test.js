@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const Studio = require('../../lib/models/studio');
-const { getErrors } = require('./helpers');
+const { getErrors } = require('./_helpers');
 
 describe('Studio model', () => {
 
@@ -9,7 +9,7 @@ describe('Studio model', () => {
             name: 'Univision',
             address: {
                 city: 'Seattle',
-                state: 'Washignton',
+                state: 'Washington',
                 country: 'MURICA'
             }
         };
