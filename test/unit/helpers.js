@@ -9,4 +9,4 @@ const getErrors = (validation, numberExpected) => {
 
 module.exports = {
     getErrors
-}
+};
