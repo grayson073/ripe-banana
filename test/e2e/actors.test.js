@@ -13,7 +13,10 @@ describe('Actors API', () => {
             .post('/api/actors')
             .send(actor)
             .then(checkOk)
-            .then(({ body }) => body);
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
     }
 
     let depp;
@@ -26,26 +29,29 @@ describe('Actors API', () => {
             });          
     });
 
+    let mario;
+    beforeEach(() => {
+        return save({
+            name: 'Mario'
+        })
+            .then(data => {
+                mario = data;
+            });          
+    });
+
     it('Saves an actor', () => {
         assert.isOk(depp._id);
     });
 
     it('Gets a list of actors', () => {
-        let mario;
-        return save({
-            name: 'Mario'
-        })
-            .then(_mario => {
-                mario = _mario;
-                return request.get('/api/actors');
-            })
-            .then(checkOk)
+        return request
+            .get('/api/actors')
             .then(({ body }) => {
                 assert.deepEqual(body, [depp, mario]);
             });
     });
 
-    it('Gets an actor by id', () => {
+    it.skip('Gets an actor by id', () => {
         return request
             .get(`/api/actors/${depp._id}`)
             .then(({ body }) => {
@@ -55,6 +61,7 @@ describe('Actors API', () => {
 
     it('Updates an actor by id', () => {
         depp.name = 'Johnny';
+        depp.dob = '1990';
         return request
             .put(`/api/actors/${depp._id}`)
             .send(depp)
@@ -62,6 +69,10 @@ describe('Actors API', () => {
             .then(({ body }) => {
                 assert.deepEqual(body, depp);
             });
+    });
+
+    it.skip('Deletes an actor by id', () => {
+
     });
 
 });

@@ -126,4 +126,10 @@ describe('Studios API', () => {
                 assert.deepEqual(body, makeStudio(univision, dogDay));
             });
     });
+
+    it.skip('Deletes a studio by id', () => {
+
+    });
+
+
 });
