@@ -52,7 +52,43 @@ describe('Films API', () => {
         assert.isOk(scarface._id);
     });
 
-    const makeFilm = (film, studio, actor) => {
+    const makeFilm = (film, studio) => {
+        const combined = {
+            _id: film._id,
+            title: film.title,
+            released: film.released
+        };
+        combined.studio = {
+            _id: studio._id,
+            name: studio.name
+        };
+        return combined;
+
+    } ;
+
+
+    it('Gets a list of films', () => {
+        let topGun;
+        return save({ 
+            title: 'Top Gun',
+            released: 1986,  
+            studio: fox._id,
+        })
+            .then(data => {
+                topGun = data;
+                return request.get('/api/films');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [
+                    makeFilm(scarface, fox),
+                    makeFilm(topGun, fox)
+                ]);
+            });
+    });
+
+
+    const makeFilm2 = (film, studio, actor) => {
         const combined = {
             _id: film._id,
             title: film.title,
@@ -75,26 +111,13 @@ describe('Films API', () => {
 
     } ;
 
-    it('Gets a list of films', () => {
-        let topGun;
-        return save({ 
-            title: 'Top Gun',
-            released: 1986,  
-            studio: fox._id,
-            cast: [{
-                actor: rock._id
-            }]
-        })
-            .then(data => {
-                topGun = data;
-                return request.get('/api/films');
-            })
-            .then(checkOk)
+    it('Gets a film by id', () => {
+        return request
+            .get(`/api/films/${scarface._id}`)
             .then(({ body }) => {
-                assert.deepEqual(body, [
-                    makeFilm(scarface, fox, rock),
-                    makeFilm(topGun, fox, rock)
-                ]);
+                assert.deepEqual(body, 
+                    makeFilm2(scarface, fox, rock)
+                );
             });
     }); 
 
