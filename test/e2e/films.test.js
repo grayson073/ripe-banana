@@ -25,12 +25,12 @@ describe('Films API', () => {
             .then(({ body }) => fox = body);
     });
 
-    let depp;
+    let rock;
     beforeEach(() => {
         return request
             .post('/api/actors')
             .send({ name: 'The Rock' })
-            .then(({ body }) => depp = body);
+            .then(({ body }) => rock = body);
     });
 
     let scarface;
@@ -39,7 +39,7 @@ describe('Films API', () => {
             title: 'Scarface',
             studio: fox._id,
             cast: [{
-                actor: depp._id
+                actor: rock._id
             }]
         })
             .then(data => {
@@ -51,13 +51,33 @@ describe('Films API', () => {
         assert.isOk(scarface._id);
     });
 
+    const makeFilm = (film, studio, actor) => {
+        const combined = {
+            _id: film._id,
+            title: film.title
+        };
+
+        combined.studio = {
+            _id: studio._id,
+            name: studio.name
+        };
+
+        combined.actor = {
+            _id: actor._id,
+            name: actor.name
+        };
+
+        return combined;
+
+    } ;
+
     it.only('Gets a list of films', () => {
         let topGun;
         return save({ 
             title: 'Top Gun', 
             studio: fox._id,
             cast: [{
-                actor: depp._id
+                actor: rock._id
             }]
         })
             .then(data => {
@@ -66,7 +86,11 @@ describe('Films API', () => {
             })
             .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body, [scarface, topGun]);
+                console.log('ALLLL', body);
+                assert.deepEqual(body, [
+                    makeFilm(scarface, fox, rock),
+                    makeFilm(topGun, fox, rock)
+                ]);
             });
     }); 
 
