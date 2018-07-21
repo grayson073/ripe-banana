@@ -38,6 +38,7 @@ describe('Films API', () => {
         return save({
             title: 'Scarface',
             studio: fox._id,
+            released: 1982,
             cast: [{
                 actor: rock._id
             }]
@@ -54,7 +55,8 @@ describe('Films API', () => {
     const makeFilm = (film, studio, actor) => {
         const combined = {
             _id: film._id,
-            title: film.title
+            title: film.title,
+            released: film.released
         };
 
         combined.studio = {
@@ -62,19 +64,22 @@ describe('Films API', () => {
             name: studio.name
         };
 
-        combined.actor = {
-            _id: actor._id,
-            name: actor.name
-        };
+        combined.cast = [{
+            actor: {
+                _id: actor._id,
+                name: actor.name
+            }    
+        }];
 
         return combined;
 
     } ;
 
-    it.only('Gets a list of films', () => {
+    it('Gets a list of films', () => {
         let topGun;
         return save({ 
-            title: 'Top Gun', 
+            title: 'Top Gun',
+            released: 1986,  
             studio: fox._id,
             cast: [{
                 actor: rock._id
@@ -86,7 +91,6 @@ describe('Films API', () => {
             })
             .then(checkOk)
             .then(({ body }) => {
-                console.log('ALLLL', body);
                 assert.deepEqual(body, [
                     makeFilm(scarface, fox, rock),
                     makeFilm(topGun, fox, rock)
