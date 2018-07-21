@@ -40,6 +40,7 @@ describe('Films API', () => {
             studio: fox._id,
             released: 1982,
             cast: [{
+                role: 'Tony Montana',
                 actor: rock._id
             }]
         })
@@ -92,26 +93,26 @@ describe('Films API', () => {
         const combined = {
             _id: film._id,
             title: film.title,
-            released: film.released
+            released: film.released,
         };
-
+        
         combined.studio = {
             _id: studio._id,
             name: studio.name
         };
-
+        
         combined.cast = [{
             actor: {
                 _id: actor._id,
                 name: actor.name
-            }    
+            },  
+            role: film.cast[0].role
         }];
-
         return combined;
 
     } ;
 
-    it('Gets a film by id', () => {
+    it.skip('Gets a film by id', () => {
         return request
             .get(`/api/films/${scarface._id}`)
             .then(({ body }) => {
@@ -119,6 +120,10 @@ describe('Films API', () => {
                     makeFilm2(scarface, fox, rock)
                 );
             });
-    }); 
+    });
+    
+    it.skip('Deletes a film by id', () => {
+
+    });
 
 });
