@@ -1,8 +1,8 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection } =  require('./db');
-const { checkOk } =  request;
-
+const { dropCollection } = require('./db');
+const { checkOk } = request;
+const { saveActor, saveFilm, saveStudio } = require('./_helpers');
 
 describe('Actors API', () => {
 
@@ -11,39 +11,6 @@ describe('Actors API', () => {
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
-
-    function saveFilm(film) {
-        return request
-            .post('/api/films')
-            .send(film)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveStudio(studio) {
-        return request
-            .post('/api/studios')
-            .send(studio)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveActor(actor) {
-        return request
-            .post('/api/actors')
-            .send(actor)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
 
     let depp;
     beforeEach(() => {
@@ -166,5 +133,4 @@ describe('Actors API', () => {
                 assert.deepEqual(body, { removed: true });
             });
     });
-
 });

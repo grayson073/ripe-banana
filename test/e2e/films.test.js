@@ -2,67 +2,13 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
+const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeFilm, makeFilm2 } = require('./_helpers');
 
 describe('Films API', () => {
 
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
-
-    function saveReview(review) {
-        return request
-            .post('/api/reviews')
-            .send(review)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveReviewer(reviewer) {
-        return request
-            .post('/api/reviewers')
-            .send(reviewer)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveFilm(film) {
-        return request
-            .post('/api/films')
-            .send(film)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveStudio(studio) {
-        return request
-            .post('/api/studios')
-            .send(studio)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveActor(actor) {
-        return request
-            .post('/api/actors')
-            .send(actor)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
 
     let ebert;
     beforeEach(() => {
@@ -111,8 +57,6 @@ describe('Films API', () => {
             });
     });
 
-
-
     let review1;
     beforeEach(() => {
         return saveReview({
@@ -129,21 +73,6 @@ describe('Films API', () => {
     it('Saves a film', () => {
         assert.isOk(scarface._id);
     });
-
-    const makeFilm = (film, studio) => {
-        const combined = {
-            _id: film._id,
-            title: film.title,
-            released: film.released
-        };
-        combined.studio = {
-            _id: studio._id,
-            name: studio.name
-        };
-        return combined;
-
-    } ;
-
 
     it('Gets a list of films', () => {
         let topGun;
@@ -164,42 +93,6 @@ describe('Films API', () => {
                 ]);
             });
     });
-
-
-    const makeFilm2 = (film, studio, actor, review, reviewer) => {
-        const combined = {
-            _id: film._id,
-            title: film.title,
-            released: film.released,
-        };
-        
-        combined.studio = {
-            _id: studio._id,
-            name: studio.name
-        };
-        
-        combined.cast = [{
-            actor: {
-                _id: actor._id,
-                name: actor.name
-            },  
-            role: film.cast[0].role
-        }];
-
-        combined.reviews = [{
-            _id: review._id,
-            rating: review.rating,
-            review: review.review,
-
-            reviewer: {
-                _id: reviewer._id,
-                name: reviewer.name
-            }
-        }];
-
-        return combined;
-
-    } ;
 
     it('Gets a film by id', () => {
         return request
@@ -224,5 +117,4 @@ describe('Films API', () => {
                 assert.deepEqual(body, []);
             });
     });
-
 });

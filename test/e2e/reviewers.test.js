@@ -2,6 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
+const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeReviewer } = require('./_helpers');
 
 describe('Reviewers API', () => {
 
@@ -10,62 +11,6 @@ describe('Reviewers API', () => {
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
-    
-    function saveReview(review) {
-        return request
-            .post('/api/reviews')
-            .send(review)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveReviewer(reviewer) {
-        return request
-            .post('/api/reviewers')
-            .send(reviewer)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveFilm(film) {
-        return request
-            .post('/api/films')
-            .send(film)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveStudio(studio) {
-        return request
-            .post('/api/studios')
-            .send(studio)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveActor(actor) {
-        return request
-            .post('/api/actors')
-            .send(actor)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
 
     let kevin;
     beforeEach(() => {
@@ -152,25 +97,6 @@ describe('Reviewers API', () => {
             });
     });
 
-    const makeReviewer = (reviewer, review, film) => {
-        const combined = {
-            _id: reviewer._id,
-            name: reviewer.name,
-            company: reviewer.company
-        };
-        combined.reviews = [{
-            _id: review._id,
-            rating: review.rating,
-            review: review.review,
-            film: {
-                _id: film._id,
-                title: film.title
-            }
-        }];
-        return combined;
-
-    };
-
     it('Gets a reviewer by id', () => {
         return request
             .get(`/api/reviewers/${kevin._id}`)
@@ -190,5 +116,4 @@ describe('Reviewers API', () => {
                 assert.deepEqual(body, kevin);
             });
     });
-
 });

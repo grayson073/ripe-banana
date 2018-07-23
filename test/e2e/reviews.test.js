@@ -2,6 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
+const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeReview } = require('./_helpers');
 
 describe('Reviews API', () => {
 
@@ -10,62 +11,6 @@ describe('Reviews API', () => {
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
-
-    function saveReview(review) {
-        return request
-            .post('/api/reviews')
-            .send(review)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveReviewer(reviewer) {
-        return request
-            .post('/api/reviewers')
-            .send(reviewer)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveFilm(film) {
-        return request
-            .post('/api/films')
-            .send(film)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveStudio(studio) {
-        return request
-            .post('/api/studios')
-            .send(studio)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveActor(actor) {
-        return request
-            .post('/api/actors')
-            .send(actor)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
 
     let ebert;
     beforeEach(() => {
@@ -119,8 +64,6 @@ describe('Reviews API', () => {
             });
     });
 
-
-
     let review1;
     beforeEach(() => {
         return saveReview({
@@ -136,21 +79,7 @@ describe('Reviews API', () => {
 
     it('Saves a review', () => {
         assert.isOk(review1._id);
-
     });
-
-    const makeReview = (review, film) => {
-        const combined = {
-            _id: review._id,
-            rating: review.rating,
-            review: review.review
-        };
-        combined.film = {
-            _id: film._id,
-            title: film.title,
-        };
-        return combined;
-    };
 
     it('Gets a list of reviews', () => {
         let review2;
@@ -170,7 +99,6 @@ describe('Reviews API', () => {
             });
     });
 
-
     it('Updates a reviews by id', () => {
         review1.rating = 1;
         review1.review = 'BEST MOVIE EVER...NOT';
@@ -183,5 +111,4 @@ describe('Reviews API', () => {
                 assert.deepEqual(body.review, review1.review);
             });
     });
-
 });
