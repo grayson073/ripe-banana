@@ -173,7 +173,16 @@ describe.only('Reviews API', () => {
 
 
     it('Updates a reviews by id', () => {
-
+        review1.rating = 1;
+        review1.review = 'BEST MOVIE EVER...NOT';
+        return request
+            .put(`/api/reviews/${review1._id}`)
+            .send(review1)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body.rating, review1.rating);
+                assert.deepEqual(body.review, review1.review);
+            });
     });
 
 });
