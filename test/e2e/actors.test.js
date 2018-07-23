@@ -6,9 +6,35 @@ const { checkOk } =  request;
 
 describe('Actors API', () => {
 
+    beforeEach(() => dropCollection('reviewers'));
+    beforeEach(() => dropCollection('reviews'));
+    beforeEach(() => dropCollection('films'));
+    beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
-    function save(actor) {
+    function saveFilm(film) {
+        return request
+            .post('/api/films')
+            .send(film)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveStudio(studio) {
+        return request
+            .post('/api/studios')
+            .send(studio)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveActor(actor) {
         return request
             .post('/api/actors')
             .send(actor)
@@ -21,22 +47,44 @@ describe('Actors API', () => {
 
     let depp;
     beforeEach(() => {
-        return save({
-            name: 'Johnny Depp'
+        return saveActor({
+            name: 'Johnny Depp',
+            dob: '1960',
+            pob: 'Wherever, USA'
         })
             .then(data => {
                 depp = data;
             });          
     });
 
-    let mario;
+    let univision;
     beforeEach(() => {
-        return save({
-            name: 'Mario'
+        return saveStudio({
+            name: 'Univision',
+            address: {
+                city: 'Portland',
+                state: 'Oregon',
+                country: 'USA'
+            }
         })
             .then(data => {
-                mario = data;
-            });          
+                univision = data;
+            });
+    });
+
+    let dogDay;
+    beforeEach(() => {
+        return saveFilm({
+            title: 'Dog Day',
+            studio: univision._id,
+            released: 1990,
+            cast: [{
+                actor: depp._id
+            }]
+        })
+            .then(data => {
+                dogDay = data;
+            });
     });
 
     it('Saves an actor', () => {
@@ -44,18 +92,43 @@ describe('Actors API', () => {
     });
 
     it('Gets a list of actors', () => {
-        return request
-            .get('/api/actors')
+        let diesel;
+        return saveActor({
+            name: 'Vin Diesel',
+            dob: '1965',
+            pob: 'California, USA'
+        })
+            .then(data => {
+                diesel = data;
+                return request.get('/api/actors');
+            })
+            .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body, [depp, mario]);
+                assert.deepEqual(body[0].name, depp.name);
+                assert.deepEqual(body[1].name, diesel.name);
             });
     });
 
-    it.skip('Gets an actor by id', () => {
+    const makeActor = (actor, film) => {
+        const combined = {
+            _id: actor._id,
+            name: actor.name,
+            dob: actor.dob,
+            pob: actor.pob
+        };
+        combined.films = [{
+            _id: film._id,
+            title: film.title,
+            released: film.released
+        }];
+        return combined;
+    };
+
+    it('Gets an actor by id', () => {
         return request
             .get(`/api/actors/${depp._id}`)
             .then(({ body }) => {
-                assert.deepEqual(body, depp);
+                assert.deepEqual(body, makeActor(depp, dogDay));
             });
     });
 
