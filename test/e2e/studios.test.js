@@ -127,9 +127,27 @@ describe('Studios API', () => {
             });
     });
 
-    it.skip('Deletes a studio by id', () => {
-
+    it('Does not delete a studio when films exist', () => {
+        return request
+            .delete(`/api/studios/${univision._id}`)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: false });
+            });
     });
 
+    it('Deletes a studio by id', () => {
+        return request
+            .delete(`/api/films/${dogDay._id}`)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: true });
+                return request.delete(`/api/studios/${univision._id}`);
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: true });
+            });
+    });
 
 });
