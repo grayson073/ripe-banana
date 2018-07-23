@@ -211,8 +211,18 @@ describe('Films API', () => {
             });
     });
     
-    it.skip('Deletes a film by id', () => {
-
+    it('Deletes a film by id', () => {
+        return request
+            .delete(`/api/films/${scarface._id}`)
+            .then(checkOk)
+            .then(res => {
+                assert.deepEqual(res.body, { removed: true });
+                return request.get('/api/films');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, []);
+            });
     });
 
 });
