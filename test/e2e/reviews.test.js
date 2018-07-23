@@ -102,7 +102,7 @@ describe.only('Reviews API', () => {
                 downey = data;
             });       
     });
-    
+
     let avengers;
     beforeEach(() => {
         return saveFilm({
@@ -139,12 +139,40 @@ describe.only('Reviews API', () => {
 
     });
 
-    it.skip('Gets a list of reviews', () => {
+    const makeReview = (review, film) => {
+        const combined = {
+            _id: review._id,
+            rating: review.rating,
+            review: review.review
+        };
+        combined.film = {
+            _id: film._id,
+            title: film.title,
+        };
+        return combined;
 
+    };
+
+    it('Gets a list of reviews', () => {
+        let review2;
+        return saveReview({
+            rating: 3,
+            reviewer: ebert._id,
+            review: 'this is terrible',
+            film: avengers._id,
+        })
+            .then(data => {
+                review2 = data;
+                return request.get('/api/reviews');
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, [makeReview(review1, avengers), makeReview(review2, avengers)]);
+            });
     });
 
 
-    it.skip('Updates a reviews by id', () => {
+    it('Updates a reviews by id', () => {
 
     });
 
