@@ -2,45 +2,13 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
+const { saveActor, saveFilm, saveStudio, makeStudio } = require('./_helpers');
 
 describe('Studios API', () => {
 
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('actors'));
-
-    function saveStudio(studio) {
-        return request
-            .post('/api/studios')
-            .send(studio)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveActor(actor) {
-        return request
-            .post('/api/actors')
-            .send(actor)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
-
-    function saveFilm(film) {
-        return request
-            .post('/api/films')
-            .send(film)
-            .then(checkOk)
-            .then(({ body }) => {
-                delete body.__v;
-                return body;
-            });
-    }
  
     let univision;
     beforeEach(() => {
@@ -105,20 +73,6 @@ describe('Studios API', () => {
             });
     });
 
-    const makeStudio = (studio, film) => {
-        const combined = {
-            _id: studio._id,
-            name: studio.name,
-            address: studio.address
-        };
-        combined.films = [{
-            _id: film._id,
-            title: film.title,
-        }];
-        return combined;
-
-    };
-
     it('Gets a studio by id', () => {
         return request
             .get(`/api/studios/${univision._id}`)
@@ -149,5 +103,4 @@ describe('Studios API', () => {
                 assert.deepEqual(body, { removed: true });
             });
     });
-
 });
