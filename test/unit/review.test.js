@@ -12,18 +12,12 @@ describe('Review model', () => {
             reviewer: Types.ObjectId(),
             review: 'It was good',
             film: Types.ObjectId(),
-            // timestamps: {
-
-            //     createdAt: new Date(),
-            //     updatedAt:  new Date(),
-            // }
         };
 
         const review = new Review(data);
-        review.save();
-        console.log('thissssss', review.timestamps);
         const json = review.toJSON();
         delete json._id;
+        assert.deepEqual(data, json);
         assert.isUndefined(review.validateSync());
         
     });
