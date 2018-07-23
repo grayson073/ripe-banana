@@ -6,8 +6,23 @@ const { checkOk } = request;
 describe('Reviewers API', () => {
 
     beforeEach(() => dropCollection('reviewers'));
+    beforeEach(() => dropCollection('reviews'));
+    beforeEach(() => dropCollection('films'));
+    beforeEach(() => dropCollection('studios'));
+    beforeEach(() => dropCollection('actors'));
     
-    function save(reviewer) {
+    function saveReview(review) {
+        return request
+            .post('/api/reviews')
+            .send(review)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveReviewer(reviewer) {
         return request
             .post('/api/reviewers')
             .send(reviewer)
@@ -18,14 +33,102 @@ describe('Reviewers API', () => {
             });
     }
 
+    function saveFilm(film) {
+        return request
+            .post('/api/films')
+            .send(film)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveStudio(studio) {
+        return request
+            .post('/api/studios')
+            .send(studio)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveActor(actor) {
+        return request
+            .post('/api/actors')
+            .send(actor)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+
     let kevin;
     beforeEach(() => {
-        return save({
+        return saveReviewer({
             name: 'Kevin',
-            company: 'Alchemy'
+            company: 'KG Reviews'
         })
             .then(data => {
                 kevin = data;
+            });
+    });
+    
+    let warner;
+    beforeEach(() => {
+        return saveStudio({
+            name: 'Warner',
+            address: {
+                city: 'Los Angeles',
+                state: 'California',
+                country: 'USA'
+            }
+        })
+            .then(data => {
+                warner = data;
+            });
+    });
+    
+    let downey; 
+    beforeEach(() => {
+        return saveActor({
+            name: 'Robert Downey Jr.'
+        })
+            .then(data => {
+                downey = data;
+            });       
+    });
+
+    let avengers;
+    beforeEach(() => {
+        return saveFilm({
+            title: 'Avengers',
+            studio: warner._id,
+            released: 2015,
+            cast: [{
+                role: 'Tony Stark',
+                actor: downey._id
+            }]
+        })
+            .then(data => {
+                avengers = data;
+            });
+    });
+
+    let review1;
+    beforeEach(() => {
+        return saveReview({
+            rating: 5,
+            reviewer: kevin._id,
+            review: 'this is good',
+            film: avengers._id,
+        })
+            .then(data => {
+                review1 = data;
             });
     });
 
@@ -35,7 +138,7 @@ describe('Reviewers API', () => {
 
     it('Gets a list of reviewers', () => {
         let mario;
-        return save({
+        return saveReviewer({
             name: 'Mario',
             company: 'Alchemy'
         })
@@ -49,17 +152,36 @@ describe('Reviewers API', () => {
             });
     });
 
-    it.skip('Gets a reviewer by id', () => {
+    const makeReviewer = (reviewer, review, film) => {
+        const combined = {
+            _id: reviewer._id,
+            name: reviewer.name,
+            company: reviewer.company
+        };
+        combined.reviews = [{
+            _id: review._id,
+            rating: review.rating,
+            review: review.review,
+            film: {
+                _id: film._id,
+                title: film.title
+            }
+        }];
+        return combined;
+
+    };
+
+    it('Gets a reviewer by id', () => {
         return request
             .get(`/api/reviewers/${kevin._id}`)
             .then(({ body }) => {
-                assert.deepEqual(body, kevin);
+                assert.deepEqual(body, makeReviewer(kevin, review1, avengers));
             });
     });
 
     it('Updates a reviewer by id', () => {
-        kevin.company = 'Epicodus';
-        kevin.name = 'John';
+        kevin.company = 'Epicodus Reviews';
+        kevin.name = 'John Reviewer';
         return request
             .put(`/api/reviewers/${kevin._id}`)
             .send(kevin)
