@@ -3,42 +3,104 @@ const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
 
-describe('Films API', () => {
+describe.only('Films API', () => {
 
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
-    function save(film) {
+    function saveReview(review) {
+        return request
+            .post('/api/reviews')
+            .send(review)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveReviewer(reviewer) {
+        return request
+            .post('/api/reviewers')
+            .send(reviewer)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    function saveFilm(film) {
         return request
             .post('/api/films')
             .send(film)
             .then(checkOk)
-            .then(({ body }) => body);
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
     }
 
-    let fox;
-    beforeEach(() => {
+    function saveStudio(studio) {
         return request
             .post('/api/studios')
-            .send({ name: 'Fox' })
-            .then(({ body }) => fox = body);
-    });
+            .send(studio)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
 
-    let rock;
-    beforeEach(() => {
+    function saveActor(actor) {
         return request
             .post('/api/actors')
-            .send({ name: 'The Rock' })
-            .then(({ body }) => rock = body);
+            .send(actor)
+            .then(checkOk)
+            .then(({ body }) => {
+                delete body.__v;
+                return body;
+            });
+    }
+
+    let ebert;
+    beforeEach(() => {
+        return saveReviewer({
+            name: 'Roger Ebert',
+            company: 'Ebert Reviews'
+        })
+            .then(data => {
+                ebert = data;
+            });
+    });
+    
+    let fox;
+    beforeEach(() => {
+        return saveStudio({
+            name: 'Fox'
+        })
+            .then(data => {
+                fox = data;
+            });
+    });
+    
+    let rock; 
+    beforeEach(() => {
+        return saveActor({
+            name: 'The Rock'
+        })
+            .then(data => {
+                rock = data;
+            });       
     });
 
     let scarface;
     beforeEach(() => {
-        return save({
+        return saveFilm({
             title: 'Scarface',
             studio: fox._id,
-            released: 1982,
+            released: 2015,
             cast: [{
                 role: 'Tony Montana',
                 actor: rock._id
@@ -46,6 +108,21 @@ describe('Films API', () => {
         })
             .then(data => {
                 scarface = data;
+            });
+    });
+
+
+
+    let review1;
+    beforeEach(() => {
+        return saveReview({
+            rating: 5,
+            reviewer: ebert._id,
+            review: 'this is good',
+            film: scarface._id,
+        })
+            .then(data => {
+                review1 = data;
             });
     });
 
@@ -70,7 +147,7 @@ describe('Films API', () => {
 
     it('Gets a list of films', () => {
         let topGun;
-        return save({ 
+        return saveFilm({ 
             title: 'Top Gun',
             released: 1986,  
             studio: fox._id,
@@ -89,7 +166,7 @@ describe('Films API', () => {
     });
 
 
-    const makeFilm2 = (film, studio, actor) => {
+    const makeFilm2 = (film, studio, actor, review, reviewer) => {
         const combined = {
             _id: film._id,
             title: film.title,
@@ -108,16 +185,28 @@ describe('Films API', () => {
             },  
             role: film.cast[0].role
         }];
+
+        combined.reviews = [{
+            _id: review._id,
+            rating: review.rating,
+            review: review.review,
+
+            reviewer: {
+                _id: reviewer._id,
+                name: reviewer.name
+            }
+        }];
+
         return combined;
 
     } ;
 
-    it.skip('Gets a film by id', () => {
+    it('Gets a film by id', () => {
         return request
             .get(`/api/films/${scarface._id}`)
             .then(({ body }) => {
                 assert.deepEqual(body, 
-                    makeFilm2(scarface, fox, rock)
+                    makeFilm2(scarface, fox, rock, review1, ebert)
                 );
             });
     });
