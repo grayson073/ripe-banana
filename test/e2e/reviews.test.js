@@ -150,7 +150,6 @@ describe('Reviews API', () => {
             title: film.title,
         };
         return combined;
-
     };
 
     it('Gets a list of reviews', () => {
