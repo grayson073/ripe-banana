@@ -117,7 +117,7 @@ describe('Studios API', () => {
         }];
         return combined;
 
-    } ;
+    };
 
     it('Gets a studio by id', () => {
         return request
