@@ -144,8 +144,27 @@ describe('Actors API', () => {
             });
     });
 
-    it.skip('Deletes an actor by id', () => {
+    it('Does not delete actor who are in films', () => {
+        return request
+            .delete(`/api/actors/${depp._id}`)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: false });
+            });
+    });
 
+    it('Deletes an actor by id', () => {
+        return request
+            .delete(`/api/films/${dogDay._id}`)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: true });
+                return request.delete(`/api/actors/${depp._id}`);
+            })
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.deepEqual(body, { removed: true });
+            });
     });
 
 });
