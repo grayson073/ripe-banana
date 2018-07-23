@@ -79,7 +79,6 @@ describe('Reviews API', () => {
 
     it('Saves a review', () => {
         assert.isOk(review1._id);
-
     });
 
     it('Gets a list of reviews', () => {
