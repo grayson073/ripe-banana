@@ -13,6 +13,8 @@ describe.only('Auth API', () => {
         return request
             .post('/api/auth/signup')
             .send({
+                name: 'Bill',
+                company: 'HGF',
                 email: 'email@email.com',
                 password: 'password'
             })
