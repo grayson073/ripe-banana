@@ -29,6 +29,12 @@ describe.only('Auth API', () => {
         assert.isDefined(token);
     });
 
+    it('Verifies a token', () => {
+        return request
+            .get('/api/auth/verify')
+            .then(checkOk);
+    });
+
     it('Can sign in a user', () => {
         return request
             .post('/api/auth/signin')
