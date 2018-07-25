@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
-const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeReviewer } = require('./_helpers');
+const { saveActor, saveFilm, saveReview, saveStudio, makeReviewer } = require('./_helpers');
 
 describe('Reviewers API', () => {
 
@@ -12,27 +12,40 @@ describe('Reviewers API', () => {
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
+    let token;
     let kevin;
     beforeEach(() => {
-        return saveReviewer({
+        let data = {
             name: 'Kevin',
-            company: 'KG Reviews'
-        })
-            .then(data => {
-                kevin = data;
+            company: 'HGF',
+            email: 'email@email.com',
+            password: 'password',
+            roles: ['admin']
+        };
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(checkOk)
+            .then(({ body }) => {
+                token = body.token;
+                delete body.reviewer.__v;
+                kevin = body.reviewer;
             });
     });
     
     let warner;
     beforeEach(() => {
-        return saveStudio({
-            name: 'Warner',
-            address: {
-                city: 'Los Angeles',
-                state: 'California',
-                country: 'USA'
-            }
-        })
+        return saveStudio(
+            {
+                name: 'Warner',
+                address: {
+                    city: 'Los Angeles',
+                    state: 'California',
+                    country: 'USA'
+                }
+            },
+            token
+        )
             .then(data => {
                 warner = data;
             });
@@ -40,9 +53,12 @@ describe('Reviewers API', () => {
     
     let downey; 
     beforeEach(() => {
-        return saveActor({
-            name: 'Robert Downey Jr.'
-        })
+        return saveActor(
+            {
+                name: 'Robert Downey Jr.'
+            },
+            token
+        )
             .then(data => {
                 downey = data;
             });       
@@ -50,15 +66,18 @@ describe('Reviewers API', () => {
 
     let avengers;
     beforeEach(() => {
-        return saveFilm({
-            title: 'Avengers',
-            studio: warner._id,
-            released: 2015,
-            cast: [{
-                role: 'Tony Stark',
-                actor: downey._id
-            }]
-        })
+        return saveFilm(
+            {
+                title: 'Avengers',
+                studio: warner._id,
+                released: 2015,
+                cast: [{
+                    role: 'Tony Stark',
+                    actor: downey._id
+                }]
+            },
+            token
+        )
             .then(data => {
                 avengers = data;
             });
@@ -66,12 +85,15 @@ describe('Reviewers API', () => {
 
     let review1;
     beforeEach(() => {
-        return saveReview({
-            rating: 5,
-            reviewer: kevin._id,
-            review: 'this is good',
-            film: avengers._id,
-        })
+        return saveReview(
+            {
+                rating: 5,
+                reviewer: kevin._id,
+                review: 'this is good',
+                film: avengers._id,
+            },
+            token
+        )
             .then(data => {
                 review1 = data;
             });
@@ -82,18 +104,11 @@ describe('Reviewers API', () => {
     });
 
     it('Gets a list of reviewers', () => {
-        let mario;
-        return saveReviewer({
-            name: 'Mario',
-            company: 'Alchemy'
-        })
-            .then(_mario => {
-                mario = _mario;
-                return request.get('/api/reviewers');
-            })
+        return request
+            .get('/api/reviewers')
             .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body, [kevin, mario]);
+                assert.deepEqual(body, [kevin]);
             });
     });
 

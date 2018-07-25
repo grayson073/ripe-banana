@@ -12,13 +12,34 @@ describe('Actors API', () => {
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
+    let token;
+    beforeEach(() => {
+        let data = {
+            name: 'Kevin',
+            company: 'HGF',
+            email: 'email@email.com',
+            password: 'password',
+            roles: ['admin']
+        };
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(checkOk)
+            .then(({ body }) => {
+                token = body.token;
+            });
+    });
+
     let depp;
     beforeEach(() => {
-        return saveActor({
-            name: 'Johnny Depp',
-            dob: '1960',
-            pob: 'Wherever, USA'
-        })
+        return saveActor(
+            {
+                name: 'Johnny Depp',
+                dob: '1960',
+                pob: 'Wherever, USA'
+            },
+            token
+        )
             .then(data => {
                 depp = data;
             });          
@@ -26,14 +47,17 @@ describe('Actors API', () => {
 
     let univision;
     beforeEach(() => {
-        return saveStudio({
-            name: 'Univision',
-            address: {
-                city: 'Portland',
-                state: 'Oregon',
-                country: 'USA'
-            }
-        })
+        return saveStudio(
+            {
+                name: 'Univision',
+                address: {
+                    city: 'Portland',
+                    state: 'Oregon',
+                    country: 'USA'
+                }
+            },
+            token
+        )
             .then(data => {
                 univision = data;
             });
@@ -41,14 +65,17 @@ describe('Actors API', () => {
 
     let dogDay;
     beforeEach(() => {
-        return saveFilm({
-            title: 'Dog Day',
-            studio: univision._id,
-            released: 1990,
-            cast: [{
-                actor: depp._id
-            }]
-        })
+        return saveFilm(
+            {
+                title: 'Dog Day',
+                studio: univision._id,
+                released: 1990,
+                cast: [{
+                    actor: depp._id
+                }]
+            },
+            token
+        )
             .then(data => {
                 dogDay = data;
             });
@@ -60,11 +87,13 @@ describe('Actors API', () => {
 
     it('Gets a list of actors', () => {
         let diesel;
-        return saveActor({
-            name: 'Vin Diesel',
-            dob: '1965',
-            pob: 'California, USA'
-        })
+        return saveActor(
+            {
+                name: 'Vin Diesel',
+                dob: '1965',
+                pob: 'California, USA'
+            },
+            token)
             .then(data => {
                 diesel = data;
                 return request.get('/api/actors');
@@ -104,6 +133,7 @@ describe('Actors API', () => {
         depp.dob = '1990';
         return request
             .put(`/api/actors/${depp._id}`)
+            .set('Authorization', token)
             .send(depp)
             .then(checkOk)
             .then(({ body }) => {
@@ -114,6 +144,7 @@ describe('Actors API', () => {
     it('Does not delete actor who are in films', () => {
         return request
             .delete(`/api/actors/${depp._id}`)
+            .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, { removed: false });
@@ -123,10 +154,13 @@ describe('Actors API', () => {
     it('Deletes an actor by id', () => {
         return request
             .delete(`/api/films/${dogDay._id}`)
+            .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, { removed: true });
-                return request.delete(`/api/actors/${depp._id}`);
+                return request
+                    .delete(`/api/actors/${depp._id}`)
+                    .set('Authorization', token);
             })
             .then(checkOk)
             .then(({ body }) => {

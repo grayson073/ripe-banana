@@ -6,20 +6,43 @@ const { saveActor, saveFilm, saveStudio, makeStudio } = require('./_helpers');
 
 describe('Studios API', () => {
 
+    beforeEach(() => dropCollection('reviewers'));
+    beforeEach(() => dropCollection('reviews'));
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('films'));
     beforeEach(() => dropCollection('actors'));
+
+    let token;
+    beforeEach(() => {
+        let data = {
+            name: 'Kevin',
+            company: 'HGF',
+            email: 'email@email.com',
+            password: 'password',
+            roles: ['admin']
+        };
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(checkOk)
+            .then(({ body }) => {
+                token = body.token;
+            });
+    });
  
     let univision;
     beforeEach(() => {
-        return saveStudio({
-            name: 'Univision',
-            address: {
-                city: 'Portland',
-                state: 'Oregon',
-                country: 'USA'
-            }
-        })
+        return saveStudio(
+            {
+                name: 'Univision',
+                address: {
+                    city: 'Portland',
+                    state: 'Oregon',
+                    country: 'USA'
+                }
+            },
+            token
+        )
             .then(data => {
                 univision = data;
             });
@@ -27,9 +50,12 @@ describe('Studios API', () => {
 
     let pacino; 
     beforeEach(() => {
-        return saveActor({
-            name: 'Al Pacino'
-        })
+        return saveActor(
+            {
+                name: 'Al Pacino'
+            },
+            token
+        )
             .then(data => {
                 pacino = data;
             });       
@@ -37,14 +63,17 @@ describe('Studios API', () => {
 
     let dogDay;
     beforeEach(() => {
-        return saveFilm({
-            title: 'Dog Day',
-            studio: univision._id,
-            released: 1990,
-            cast: [{
-                actor: pacino._id
-            }]
-        })
+        return saveFilm(
+            {
+                title: 'Dog Day',
+                studio: univision._id,
+                released: 1990,
+                cast: [{
+                    actor: pacino._id
+                }]
+            },
+            token
+        )
             .then(data => {
                 dogDay = data;
             });
@@ -58,10 +87,13 @@ describe('Studios API', () => {
 
     it('Gets a list of studios', () => {
         let fox;
-        return saveStudio({
-            name: 'Fox',
+        return saveStudio(
+            {
+                name: 'Fox',
             
-        })
+            },
+            token
+        )
             .then(_fox => {
                 fox = _fox;
                 return request.get('/api/studios');
@@ -84,6 +116,7 @@ describe('Studios API', () => {
     it('Does not delete a studio when films exist', () => {
         return request
             .delete(`/api/studios/${univision._id}`)
+            .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, { removed: false });
@@ -93,10 +126,13 @@ describe('Studios API', () => {
     it('Deletes a studio by id', () => {
         return request
             .delete(`/api/films/${dogDay._id}`)
+            .set('Authorization', token)
             .then(checkOk)
             .then(({ body }) => {
                 assert.deepEqual(body, { removed: true });
-                return request.delete(`/api/studios/${univision._id}`);
+                return request
+                    .delete(`/api/studios/${univision._id}`)
+                    .set('Authorization', token);
             })
             .then(checkOk)
             .then(({ body }) => {

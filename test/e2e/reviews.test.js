@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
-const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeReview } = require('./_helpers');
+const { saveActor, saveFilm, saveReview, saveStudio, makeReview } = require('./_helpers');
 
 describe('Reviews API', () => {
 
@@ -12,27 +12,40 @@ describe('Reviews API', () => {
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
+    let token;
     let ebert;
     beforeEach(() => {
-        return saveReviewer({
-            name: 'Roger Ebert',
-            company: 'Ebert Reviews'
-        })
-            .then(data => {
-                ebert = data;
+        let data = {
+            name: 'Kevin',
+            company: 'HGF',
+            email: 'email@email.com',
+            password: 'password',
+            roles: ['admin']
+        };
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(checkOk)
+            .then(({ body }) => {
+                token = body.token;
+                delete body.reviewer.__v;
+                ebert = body.reviewer;
             });
     });
     
     let warner;
     beforeEach(() => {
-        return saveStudio({
-            name: 'Warner',
-            address: {
-                city: 'Los Angeles',
-                state: 'California',
-                country: 'USA'
-            }
-        })
+        return saveStudio(
+            {
+                name: 'Warner',
+                address: {
+                    city: 'Los Angeles',
+                    state: 'California',
+                    country: 'USA'
+                }
+            },
+            token
+        )
             .then(data => {
                 warner = data;
             });
@@ -40,9 +53,12 @@ describe('Reviews API', () => {
     
     let downey; 
     beforeEach(() => {
-        return saveActor({
-            name: 'Robert Downey Jr.'
-        })
+        return saveActor(
+            {
+                name: 'Robert Downey Jr.'
+            },
+            token
+        )
             .then(data => {
                 downey = data;
             });       
@@ -50,15 +66,18 @@ describe('Reviews API', () => {
 
     let avengers;
     beforeEach(() => {
-        return saveFilm({
-            title: 'Avengers',
-            studio: warner._id,
-            released: 2015,
-            cast: [{
-                role: 'Tony Stark',
-                actor: downey._id
-            }]
-        })
+        return saveFilm(
+            {
+                title: 'Avengers',
+                studio: warner._id,
+                released: 2015,
+                cast: [{
+                    role: 'Tony Stark',
+                    actor: downey._id
+                }]
+            },
+            token
+        )
             .then(data => {
                 avengers = data;
             });
@@ -66,12 +85,15 @@ describe('Reviews API', () => {
 
     let review1;
     beforeEach(() => {
-        return saveReview({
-            rating: 5,
-            reviewer: ebert._id,
-            review: 'this is good',
-            film: avengers._id,
-        })
+        return saveReview(
+            {
+                rating: 5,
+                reviewer: ebert._id,
+                review: 'this is good',
+                film: avengers._id,
+            },
+            token
+        )
             .then(data => {
                 review1 = data;
             });
@@ -82,20 +104,11 @@ describe('Reviews API', () => {
     });
 
     it('Gets a list of reviews', () => {
-        let review2;
-        return saveReview({
-            rating: 3,
-            reviewer: ebert._id,
-            review: 'this is terrible',
-            film: avengers._id,
-        })
-            .then(data => {
-                review2 = data;
-                return request.get('/api/reviews');
-            })
+        return request
+            .get('/api/reviews')
             .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body, [makeReview(review1, avengers), makeReview(review2, avengers)]);
+                assert.deepEqual(body, [makeReview(review1, avengers)]);
             });
     });
 
