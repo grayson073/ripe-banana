@@ -111,7 +111,10 @@ const makeReviewer = (reviewer, review, film) => {
     const combined = {
         _id: reviewer._id,
         name: reviewer.name,
-        company: reviewer.company
+        company: reviewer.company,
+        email: reviewer.email,
+        hash: reviewer.hash,
+        roles: reviewer.roles
     };
     combined.reviews = [{
         _id: review._id,
@@ -120,7 +123,7 @@ const makeReviewer = (reviewer, review, film) => {
         film: {
             _id: film._id,
             title: film.title
-        }
+        },
     }];
     return combined;
 };

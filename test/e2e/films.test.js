@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const { checkOk } = request;
 const { saveActor, saveFilm, saveReview, saveStudio, makeFilm, makeFilm2 } = require('./_helpers');
 
-describe.only('Films API', () => {
+describe('Films API', () => {
 
     beforeEach(() => dropCollection('reviewers'));
     beforeEach(() => dropCollection('reviews'));

@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const { checkOk } = request;
-const { saveActor, saveFilm, saveReview, saveReviewer, saveStudio, makeReviewer } = require('./_helpers');
+const { saveActor, saveFilm, saveReview, saveStudio, makeReviewer } = require('./_helpers');
 
 describe('Reviewers API', () => {
 
@@ -35,14 +35,17 @@ describe('Reviewers API', () => {
     
     let warner;
     beforeEach(() => {
-        return saveStudio({
-            name: 'Warner',
-            address: {
-                city: 'Los Angeles',
-                state: 'California',
-                country: 'USA'
-            }
-        })
+        return saveStudio(
+            {
+                name: 'Warner',
+                address: {
+                    city: 'Los Angeles',
+                    state: 'California',
+                    country: 'USA'
+                }
+            },
+            token
+        )
             .then(data => {
                 warner = data;
             });
@@ -50,9 +53,12 @@ describe('Reviewers API', () => {
     
     let downey; 
     beforeEach(() => {
-        return saveActor({
-            name: 'Robert Downey Jr.'
-        })
+        return saveActor(
+            {
+                name: 'Robert Downey Jr.'
+            },
+            token
+        )
             .then(data => {
                 downey = data;
             });       
@@ -60,15 +66,18 @@ describe('Reviewers API', () => {
 
     let avengers;
     beforeEach(() => {
-        return saveFilm({
-            title: 'Avengers',
-            studio: warner._id,
-            released: 2015,
-            cast: [{
-                role: 'Tony Stark',
-                actor: downey._id
-            }]
-        })
+        return saveFilm(
+            {
+                title: 'Avengers',
+                studio: warner._id,
+                released: 2015,
+                cast: [{
+                    role: 'Tony Stark',
+                    actor: downey._id
+                }]
+            },
+            token
+        )
             .then(data => {
                 avengers = data;
             });
