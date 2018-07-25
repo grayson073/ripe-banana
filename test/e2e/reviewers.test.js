@@ -12,14 +12,24 @@ describe('Reviewers API', () => {
     beforeEach(() => dropCollection('studios'));
     beforeEach(() => dropCollection('actors'));
 
+    let token;
     let kevin;
     beforeEach(() => {
-        return saveReviewer({
+        let data = {
             name: 'Kevin',
-            company: 'KG Reviews'
-        })
-            .then(data => {
-                kevin = data;
+            company: 'HGF',
+            email: 'email@email.com',
+            password: 'password',
+            roles: ['admin']
+        };
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(checkOk)
+            .then(({ body }) => {
+                token = body.token;
+                delete body.reviewer.__v;
+                kevin = body.reviewer;
             });
     });
     
@@ -66,12 +76,15 @@ describe('Reviewers API', () => {
 
     let review1;
     beforeEach(() => {
-        return saveReview({
-            rating: 5,
-            reviewer: kevin._id,
-            review: 'this is good',
-            film: avengers._id,
-        })
+        return saveReview(
+            {
+                rating: 5,
+                reviewer: kevin._id,
+                review: 'this is good',
+                film: avengers._id,
+            },
+            token
+        )
             .then(data => {
                 review1 = data;
             });
@@ -82,18 +95,11 @@ describe('Reviewers API', () => {
     });
 
     it('Gets a list of reviewers', () => {
-        let mario;
-        return saveReviewer({
-            name: 'Mario',
-            company: 'Alchemy'
-        })
-            .then(_mario => {
-                mario = _mario;
-                return request.get('/api/reviewers');
-            })
+        return request
+            .get('/api/reviewers')
             .then(checkOk)
             .then(({ body }) => {
-                assert.deepEqual(body, [kevin, mario]);
+                assert.deepEqual(body, [kevin]);
             });
     });
 
