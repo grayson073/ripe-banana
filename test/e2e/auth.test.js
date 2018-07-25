@@ -9,15 +9,16 @@ describe.only('Auth API', () => {
     beforeEach(() => dropCollection('reviewers'));
 
     let token;
+    let bill = {
+        name: 'Bill',
+        company: 'HGF',
+        email: 'email@email.com',
+        password: 'password'
+    };
     beforeEach(() => {
         return request
             .post('/api/auth/signup')
-            .send({
-                name: 'Bill',
-                company: 'HGF',
-                email: 'email@email.com',
-                password: 'password'
-            })
+            .send(bill)
             .then(checkOk)
             .then(({ body }) => {
                 token = body.token;
@@ -26,6 +27,16 @@ describe.only('Auth API', () => {
 
     it('Signs up a reviewer', () => {
         assert.isDefined(token);
+    });
+
+    it('Can sign in a user', () => {
+        return request
+            .post('/api/auth/signin')
+            .send(bill)
+            .then(checkOk)
+            .then(({ body }) => {
+                assert.isDefined(body.token);
+            });
     });
 
 });
