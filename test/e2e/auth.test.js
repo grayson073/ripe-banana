@@ -46,4 +46,36 @@ describe.only('Auth API', () => {
             });
     });
 
+    it('Fails on a wrong password', () => {
+        bill.password = 'bad';
+        return request
+            .post('/api/auth/signin')
+            .send(bill)
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'The interwebz doesn\'t care for your email or password');
+            });
+    });
+
+    it('Cannot sign up with same email', () => {
+        return request
+            .post('/api/auth/signup')
+            .send(bill)
+            .then(res => {
+                assert.equal(res.status, 400);
+                assert.equal(res.body.error, 'Email already in use');
+            });
+    });
+
+    it('Gives 401 on bad email signin', () => {
+        bill.email = 'bad@me.com';
+        return request
+            .post('/api/auth/signin')
+            .send(bill)
+            .then(res => {
+                assert.equal(res.status, 401);
+                assert.equal(res.body.error, 'The interwebz doesn\'t care for your email or password');
+            });
+    });
+
 });
