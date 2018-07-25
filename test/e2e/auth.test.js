@@ -32,6 +32,7 @@ describe.only('Auth API', () => {
     it('Verifies a token', () => {
         return request
             .get('/api/auth/verify')
+            .set('Authorization', token)
             .then(checkOk);
     });
 
