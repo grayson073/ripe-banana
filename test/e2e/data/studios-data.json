@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5b5b42608056428edd93a7c2"},"name":"20th Century Fox","address":{"city":"Century City","state":"CA","country":"USA"}}
+{"_id":{"$oid":"5b5b42608056428edd93a7c3"},"name":"Paramount Pictures","address":{"city":"Hollywood","state":"CA","country":"USA"}}
+{"_id":{"$oid":"5b5b42608056428edd93a7c4"},"name":"Walt Disney Studios","address":{"city":"Burbank","state":"CA","country":"USA"}}

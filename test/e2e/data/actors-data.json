@@ -1,0 +1,8 @@
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fca"},"name":"Andy Garcia","dob":"4/12/1956","pob":"Havana, Cuba"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fcb"},"name":"George Clooney","dob":"05/6/1961","pob":"Lexington, KY"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fcc"},"name":"Brad Pitt","dob":"12/18/1963","pob":"Shawnee, OK"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fcd"},"name":"Matt Damon","dob":"10/8/1970","pob":"Cambridge, MA"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fce"},"name":"Al Pacino","dob":"4/25/1940","pob":"New York City, NY"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fcf"},"name":"Elliott Gould","dob":"8/29/1938","pob":"Cambridge, MA"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fd0"},"name":"Don Cheadle","dob":"11/29/1964","pob":"Kansas City, MO"}
+{"_id":{"$oid":"5b5b5b2bdf814a1d71ae8fd1"},"name":"Bernie Mac","dob":"10/5/1957","pob":"Chicago, IL"}

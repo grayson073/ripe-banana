@@ -1,0 +1,24 @@
+{"_id":{"$oid":"5b5b654cdf814a1d71ae964d"},"rating":1,"reviewer":"5b5b600b8056428edd93af50","review":"This movie was the worst I've ever seen. Actor sucks.","film":"5b5b60a8df814a1d71ae93e2"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae964e"},"rating":5,"reviewer":"5b5b600b8056428edd93af50","review":"This movie was the bomb.","film":"5b5b60a8df814a1d71ae93e2"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae964f"},"rating":5,"reviewer":"5b5b600b8056428edd93af52","review":"Absolutely fantastic.","film":"5b5b60a8df814a1d71ae93e3"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9650"},"rating":2,"reviewer":"5b5b600b8056428edd93af52","review":"Mediocre at best.","film":"5b5b60a8df814a1d71ae93e2"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9651"},"rating":3,"reviewer":"5b5b600b8056428edd93af50","review":"Meh.","film":"5b5b60a8df814a1d71ae93e4"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9652"},"rating":4,"reviewer":"5b5b600b8056428edd93af50","review":"Really great acting, too long though.","film":"5b5b60a8df814a1d71ae93e3"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9653"},"rating":4,"reviewer":"5b5b600b8056428edd93af50","review":"More of a chick flick. Really good though.","film":"5b5b60a8df814a1d71ae93e5"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9654"},"rating":5,"reviewer":"5b5b600b8056428edd93af51","review":"Best movie of the summer, hands down.","film":"5b5b60a8df814a1d71ae93e6"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9655"},"rating":3,"reviewer":"5b5b600b8056428edd93af50","review":"I mean, I guess it was alright. More explosions.","film":"5b5b60a8df814a1d71ae93e4"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9656"},"rating":3,"reviewer":"5b5b600b8056428edd93af51","review":"Average for the series. I liked the original better but so goes trilogies.","film":"5b5b60a8df814a1d71ae93e6"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9657"},"rating":1,"reviewer":"5b5b600b8056428edd93af51","review":"I burnt it.","film":"5b5b60a8df814a1d71ae93e9"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9658"},"rating":4,"reviewer":"5b5b600b8056428edd93af51","review":"Awesome cast and really good plot.","film":"5b5b60a8df814a1d71ae93e9"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9659"},"rating":2,"reviewer":"5b5b600b8056428edd93af51","review":"Not my favorite. Wouldn't spend $15 again.","film":"5b5b60a8df814a1d71ae93e7"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965a"},"rating":5,"reviewer":"5b5b600b8056428edd93af51","review":"Best animation movie from Disney thus far!","film":"5b5b60a8df814a1d71ae93e8"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965b"},"rating":5,"reviewer":"5b5b600b8056428edd93af4f","review":"AWESOME!","film":"5b5b60a8df814a1d71ae93ed"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965c"},"rating":4,"reviewer":"5b5b600b8056428edd93af51","review":"Super cool plot twist (SPOILERS AHEAD)....he dies at the end.","film":"5b5b60a8df814a1d71ae93ea"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965d"},"rating":4,"reviewer":"5b5b600b8056428edd93af51","review":"??? What else can you say about such a cool idea for a movie.","film":"5b5b60a8df814a1d71ae93eb"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965e"},"rating":2,"reviewer":"5b5b600b8056428edd93af4f","review":"Sucksssssss.","film":"5b5b60a8df814a1d71ae93ef"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae965f"},"rating":5,"reviewer":"5b5b600b8056428edd93af4f","review":"Definitely worth taking your friends to see. Didn't have anyone see it and not enjoy it.","film":"5b5b60a8df814a1d71ae93ee"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9660"},"rating":1,"reviewer":"5b5b600b8056428edd93af52","review":"Never. Again. OMG.","film":"5b5b60a8df814a1d71ae93ef"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9661"},"rating":2,"reviewer":"5b5b600b8056428edd93af52","review":"WHAT???? Why??? Really bad.","film":"5b5b60a8df814a1d71ae93f0"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9662"},"rating":3,"reviewer":"5b5b600b8056428edd93af52","review":"I LIKED THIS MOVIE AB TIB TUT IT WAS TOO LONG I THINK I WOULD SEE IT AGAIN MAYBE IF IT WAS FREE","film":"5b5b60a8df814a1d71ae93f1"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9663"},"rating":4,"reviewer":"5b5b600b8056428edd93af52","review":"Definitely worth the money. Go see!","film":"5b5b60a8df814a1d71ae93f1"}
+{"_id":{"$oid":"5b5b654cdf814a1d71ae9664"},"rating":4,"reviewer":"5b5b600b8056428edd93af4f","review":"Really good, would see again.","film":"5b5b60a8df814a1d71ae93ec"}

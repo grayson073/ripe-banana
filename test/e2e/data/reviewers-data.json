@@ -1,0 +1,4 @@
+{"_id":{"$oid":"5b5b600b8056428edd93af4f"},"name":"Kevin","company":"ACL","email":"kevin@portland","hash":"hash123"}
+{"_id":{"$oid":"5b5b600b8056428edd93af50"},"name":"Carmen","company":"ACL","email":"carmen@portland","hash":"hash111"}
+{"_id":{"$oid":"5b5b600b8056428edd93af51"},"name":"Bobby","company":"ACL","email":"bobby@portland","hash":"hashing333"}
+{"_id":{"$oid":"5b5b600b8056428edd93af52"},"name":"Easton","company":"ACL","email":"easton@portland","hash":"hash222"}
